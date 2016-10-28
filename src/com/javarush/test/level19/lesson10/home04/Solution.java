@@ -1,7 +1,11 @@
 package com.javarush.test.level19.lesson10.home04;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /* Ищем нужные строки
 Считать с консоли имя файла.
@@ -24,7 +28,28 @@ public class Solution {
         words.add("В");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
+        Scanner sc = new Scanner(System.in);
+        String fileName = sc.next();
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String tempLine;
+        String[] list;
+        int count = 0;
+        while (reader.ready()) {
+            tempLine = reader.readLine();
+            list = tempLine.split(" ");
+            for (int i = 0; i < words.size(); i++) {
+                for (String str : list) {
+                    if (str.equals(words.get(i)))
+                        count++;
+                }
+            }
+            if (count == 2)
+                System.out.println(tempLine);
+            count = 0;
+        }
+        sc.close();
+        reader.close();
     }
 }
