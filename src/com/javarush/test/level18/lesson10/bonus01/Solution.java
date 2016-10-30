@@ -13,8 +13,27 @@ fileOutputName - имя файла, куда необходимо записат
 -d - ключ указывает, что необходимо расшифровать данные
 */
 
-public class Solution {
-    public static void main(String[] args) {
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
+public class Solution {
+    private static volatile int eKey = 9;
+
+    public static void main(String[] args) throws IOException {
+        FileReader reader = new FileReader(args[1]);
+        FileWriter writer = new FileWriter(args[2]);
+        if (args[0].equals("-e")) {
+            while (reader.ready()) {
+                writer.write(reader.read() + eKey);
+            }
+        }
+        if (args[0].equals("-d")) {
+            while (reader.ready()) {
+                writer.write(reader.read() - eKey);
+            }
+        }
+        reader.close();
+        writer.close();
     }
 }
