@@ -33,6 +33,5 @@ public class Solution {
         Scanner sc = new Scanner(System.in);
         BufferedReader reader = new BufferedReader(new FileReader(sc.next()));
         BufferedWriter writer = new BufferedWriter(new FileWriter(sc.next()));
-        
     }
 }
