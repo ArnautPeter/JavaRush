@@ -30,8 +30,64 @@ import java.util.Scanner;
 
 public class Solution {
     public static void main(String[] args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        BufferedReader reader = new BufferedReader(new FileReader(sc.next()));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(sc.next()));
+
+        if (args[0].equals("-c")) {
+
+            Scanner sc = new Scanner(System.in);
+            String fileName = sc.next();
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String lastString = "";
+
+            while (reader.ready()) {
+                lastString = reader.readLine();
+            }
+            if (lastString.isEmpty())
+                return;
+
+            String lastID = lastString.substring(0, 8).trim();
+            int nextID = (Integer.parseInt(lastID)) + 1;
+            lastID = String.valueOf(nextID);
+
+            if (lastID.length() > 8)
+                lastID = lastID.substring(0, 8);
+            else if (lastID.length() < 8)
+                for (int i = lastID.length(); i < 8; i++)
+                    lastID += " ";
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+
+            String productName = args[1];
+            if (productName.length() > 30)
+                productName = productName.substring(0, 30);
+            else if (productName.length() < 30)
+                for (int i = productName.length(); i < 30; i++)
+                    productName += " ";
+
+
+            String price = args[2];
+            if (price.length() > 8)
+                price = price.substring(0, 8);
+            else if (price.length() < 8)
+                for (int i = price.length(); i < 8; i++)
+                    price += " ";
+
+
+            String quantity = args[3];
+            if (quantity.length() > 4)
+                quantity = quantity.substring(0, 4);
+            else if (quantity.length() < 4)
+                for (int i = quantity.length(); i < 4; i++)
+                    quantity += " ";
+
+
+            writer.write('\n');
+            writer.write(lastID);
+            writer.write(productName);
+            writer.write(price);
+            writer.write(quantity);
+            sc.close();
+            reader.close();
+            writer.close();
+        }
     }
 }
