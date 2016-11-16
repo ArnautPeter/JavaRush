@@ -1,8 +1,5 @@
 package com.javarush.test.level15.lesson12.bonus02;
 
-/**
- * Created by spider on 06.02.16.
- */
 public class TeaMaker extends DrinkMaker
 {
     public void getRightCup() {
