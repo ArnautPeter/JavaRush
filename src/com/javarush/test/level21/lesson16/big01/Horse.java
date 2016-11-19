@@ -2,9 +2,9 @@ package com.javarush.test.level21.lesson16.big01;
 
 public class Horse {
 
-    String name;
-    double speed;
-    double distance;
+    private String name;
+    private double speed;
+    private double distance;
 
     public Horse(String name, double speed, double distance) {
         this.name = name;
@@ -13,12 +13,12 @@ public class Horse {
     }
 
     public void move() {
-        distance = distance + speed * Math.random();
+        distance += speed * Math.random();
     }
 
     public void print() {
 
-        for (int i = 0; i < distance; i++) {
+        for (int i = 0; i < (int) (Math.round(distance)); i++) {
             System.out.print(".");
         }
         System.out.println(getName());
