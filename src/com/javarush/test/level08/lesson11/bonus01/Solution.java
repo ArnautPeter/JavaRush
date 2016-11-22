@@ -1,7 +1,5 @@
 package com.javarush.test.level08.lesson11.bonus01;
 
-import com.sun.org.apache.xerces.internal.impl.dv.xs.MonthDayDV;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,40 +10,27 @@ import java.util.*;
 Используйте коллекции.
 */
 
-public class Solution
-{
-    public static void main(String[] args) throws IOException
-    {
+public class Solution {
+    public static void main(String[] args) throws IOException {
         //напишите тут ваш код
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        map.put("January", 1);
+        map.put("February", 2);
+        map.put("March", 3);
+        map.put("April", 4);
+        map.put("May", 5);
+        map.put("June", 6);
+        map.put("July", 7);
+        map.put("August", 8);
+        map.put("September", 9);
+        map.put("October", 10);
+        map.put("November", 11);
+        map.put("December", 12);
 
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("January");
-        list.add("February");
-        list.add("March");
-        list.add("April");
-        list.add("May");
-        list.add("June");
-        list.add("July");
-        list.add("August");
-        list.add("September");
-        list.add("October");
-        list.add("November");
-        list.add("December");
+        String month = reader.readLine();
 
-        String mouth = reader.readLine();
-        Boolean flag = false;
-
-        for (int i = 0; i < list.size(); i++){
-            if (mouth.equals(list.get(i))){
-                System.out.println(mouth + " is " + (i + 1) + " mouth");
-                flag = true;
-            }
-        }
-        if(!flag){
-            System.out.println("error");
-        }
+        System.out.println(month + " is " + map.get(month) + " month");
     }
-
 }
