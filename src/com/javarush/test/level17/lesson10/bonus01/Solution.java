@@ -1,5 +1,6 @@
 package com.javarush.test.level17.lesson10.bonus01;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,32 +42,33 @@ public class Solution {
     }
 
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, IOException {
         //start here - начни тут
-        if ("-c".equals(args[0]))
+        if ("-c".equals(args[0]) && args.length == 4)
             addUser(args);
-        if ("-u".equals(args[0]))
+        if ("-u".equals(args[0]) && args.length == 5)
             editUser(args);
-        if ("-d".equals(args[0]))
+        if ("-d".equals(args[0]) && args.length == 2)
             deleteUser(Integer.parseInt(args[1]));
-        if ("-i".equals(args[0]))
+        if ("-i".equals(args[0]) && args.length == 2)
             printUser(Integer.parseInt(args[1]));
 
     }
 
-    private static void addUser(String[] args) throws ParseException {
+    private static void addUser(String[] args) throws ParseException, IOException {
 
         Date bd = null;
-        try {
+        try
+        {
             bd = dateFormat.parse(args[3]);
-        } catch (ParseException e) {
-            System.out.println("Wrong date");
         }
-        if (args[2].equals("м"))
+        catch (ParseException e) {System.out.println("Wrong date");}
+        if(args[2].equals("м"))
             allPeople.add(Person.createMale(args[1], bd));
-        else if (args[2].equals("ж"))
+        else if(args[2].equals("ж"))
             allPeople.add(Person.createFemale(args[1], bd));
-        System.out.println("id= " + (allPeople.size() - 1));
+        else throw new IOException("Wrong data");
+        System.out.println("id= " + (allPeople.size()-1));
     }
 
     private static void editUser(String[] args) throws ParseException {
@@ -91,10 +93,10 @@ public class Solution {
     private static void printUser(int id) {
         Person person = allPeople.get(id);
         String sex;
-        if (person.getSex().equals(Sex.FEMALE))
+        if(person.getSex().equals(Sex.FEMALE))
             sex = "ж";
         else sex = "м";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
-        System.out.println(person.getName() + " " + sex + " " + dateFormat.format(person.getBirthDay()));
+        System.out.println(person.getName()+" " + sex + " " + dateFormat.format(person.getBirthDay()));
     }
 }
