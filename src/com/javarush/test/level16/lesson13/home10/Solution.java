@@ -1,9 +1,6 @@
 package com.javarush.test.level16.lesson13.home10;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /* Последовательный вывод файлов
 1. Разберись, что делает программа.
@@ -19,10 +16,18 @@ import java.io.IOException;
 [все тело первого файла]
 [все тело второго файла]
 */
-
 public class Solution {
     public static String firstFileName;
     public static String secondFileName;
+
+    static {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            firstFileName = reader.readLine();
+            secondFileName = reader.readLine();
+        } catch (IOException e) {
+        }
+    }
 
     public static void main(String[] args) throws InterruptedException {
         systemOutPrintln(firstFileName);
@@ -33,11 +38,11 @@ public class Solution {
         ReadFileInterface f = new ReadFileThread();
         f.setFileName(fileName);
         f.start();
+        f.join();
         System.out.println(f.getFileContent());
     }
 
     public static interface ReadFileInterface {
-
         void setFileName(String fullFileName);
 
         String getFileContent();
@@ -45,5 +50,35 @@ public class Solution {
         void join() throws InterruptedException;
 
         void start();
+    }
+
+    public static class ReadFileThread extends Thread implements ReadFileInterface {
+        private String fileName;
+        private String content = "";
+
+        @Override
+        public void setFileName(String fullFileName) {
+            this.fileName = fullFileName;
+        }
+
+        @Override
+        public String getFileContent() {
+            return this.content;
+        }
+
+        @Override
+        public void run() {
+            String buf = "";
+            try {
+                BufferedReader reader1 = new BufferedReader(new FileReader(fileName));
+                while (true) {
+                    buf = reader1.readLine();
+                    if (buf == null) break;
+                    content = content + buf + " ";
+                }
+                reader1.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.javarush.test.level16.lesson13.bonus02;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,30 +21,25 @@ public class Solution {
     public static List<Thread> threads = new ArrayList<Thread>(5);
 
     static {
-        threads.add(new Thread(new Thread1()));
-        threads.add(new Thread(new Thread2()));
-        threads.add(new Thread(new Thread3()));
-        threads.add(new Thread(new Thread4()));
-        threads.add(new Thread(new Thread5()));
+        threads.add(new Eternal());
+        threads.add(new InterEx());
+        threads.add(new Ura());
+        threads.add(new MessageImpl());
+        threads.add(new Sum());
     }
 
-
-    public static class Thread1 extends Thread {
-
-        @Override
+    public static class Eternal extends Thread {
         public void run() {
-            while (true) ;
+            while (true) {
+            }
         }
     }
 
-    public static class Thread2 extends Thread {
-
-        @Override
+    public static class InterEx extends Thread {
         public void run() {
             try {
-                while (!isInterrupted()) {
-                    Thread.sleep(1);
-                    throw new InterruptedException();
+                while (true) {
+                    Thread.sleep(5000);
                 }
             } catch (InterruptedException e) {
                 System.out.println("InterruptedException");
@@ -53,46 +47,55 @@ public class Solution {
         }
     }
 
-    public static class Thread3 extends Thread {
-
-        @Override
+    public static class Ura extends Thread {
         public void run() {
             try {
-                Thread.sleep(500);
-                System.out.println("Ура");
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-
-    public static class Thread4 extends Thread implements Message {
-
-        public void showWarning() {
-            try {
-                interrupt();
-                while (isAlive()){
-
+                while (!isInterrupted()) {
+                    System.out.println("Ура");
+                    Thread.sleep(500);
                 }
             } catch (Exception e) {
             }
         }
     }
 
-    public static class Thread5 extends Thread {
-        public void run() {
+    public static class MessageImpl extends Thread implements Message {
+        public void showWarning() {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                String buffer = reader.readLine();
-                int sum = 0;
-                while (!buffer.equals("N")) {
-                    sum = sum + Integer.parseInt(buffer);
-                    buffer = reader.readLine();
-                }
-                System.out.println(sum);
-            } catch (IOException e) {
+                this.interrupt();
+                this.join();
+            } catch (Exception e) {
             }
         }
 
+        public void run() {
+            while (!isInterrupted()) {
+
+            }
+        }
+    }
+
+    public static class Sum extends Thread {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        public void run() {
+            try {
+                String line = reader.readLine();
+                int sum = 0;
+                while (!line.equals("N")) {
+                    sum += Integer.parseInt(line);
+                    line = reader.readLine();
+                }
+                System.out.println(sum);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    reader.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
-

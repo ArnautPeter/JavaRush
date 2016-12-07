@@ -1,12 +1,12 @@
 package com.javarush.test.level22.lesson18.big01;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс Field описывает "поле клеток" игры Тетрис
  */
-public class Field
-{
+public class Field {
     //ширина и высота
     private int width;
     private int height;
@@ -14,25 +14,21 @@ public class Field
     //матрица поля: 1 - клетка занята, 0 - свободна
     private int[][] matrix;
 
-    public Field(int width, int height)
-    {
+    public Field(int width, int height) {
         this.width = width;
         this.height = height;
         matrix = new int[height][width];
     }
 
-    public int getWidth()
-    {
+    public int getWidth() {
         return width;
     }
 
-    public int getHeight()
-    {
+    public int getHeight() {
         return height;
     }
 
-    public int[][] getMatrix()
-    {
+    public int[][] getMatrix() {
         return matrix;
     }
 
@@ -40,8 +36,7 @@ public class Field
      * Метод возвращает значение, которое содержится в матрице с координатами (x,y)
      * Если координаты за пределами матрицы, метод возвращает null.
      */
-    public Integer getValue(int x, int y)
-    {
+    public Integer getValue(int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y < height)
             return matrix[y][x];
 
@@ -49,10 +44,9 @@ public class Field
     }
 
     /**
-     *  Метод устанавливает переданное значение(value) в ячейку матрицы с координатами (x,y)
+     * Метод устанавливает переданное значение(value) в ячейку матрицы с координатами (x,y)
      */
-    public void setValue(int x, int y, int value)
-    {
+    public void setValue(int x, int y, int value) {
         if (x >= 0 && x < width && y >= 0 && y < height)
             matrix[y][x] = value;
     }
@@ -60,16 +54,13 @@ public class Field
     /**
      * Метод печатает на экран текущее содержание матрицы
      */
-    public void print()
-    {
+    public void print() {
         //Создаем массив, куда будем "рисовать" текущее состояние игры
         int[][] canvas = new int[height][width];
 
         //Копируем "матрицу поля" в массив
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 canvas[i][j] = matrix[i][j];
             }
         }
@@ -79,10 +70,8 @@ public class Field
         int top = Tetris.game.getFigure().getY();
         int[][] brickMatrix = Tetris.game.getFigure().getMatrix();
 
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 if (top + i >= height || left + j >= width) continue;
                 if (brickMatrix[i][j] == 1)
                     canvas[top + i][left + j] = 2;
@@ -93,10 +82,8 @@ public class Field
         //Выводим "нарисованное" на экран, но начинаем с "границы кадра".
         System.out.println("---------------------------------------------------------------------------\n");
 
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 int index = canvas[i][j];
                 if (index == 0)
                     System.out.print(" . ");
@@ -118,12 +105,25 @@ public class Field
     /**
      * Удаляем заполненные линии
      */
-    public void removeFullLines()
-    {
+    public void removeFullLines() {
         //Например так:
         //Создаем список для хранения линий
         //Копируем все непустые линии в список.
         //Добавляем недостающие строки в начало списка.
         //Преобразуем список обратно в матрицу
+
+        List<int[]> list = new ArrayList<>();
+
+        for (int i = 0; i < matrix.length; i++) {
+            int count = 0;
+            for (int j = 0; j < matrix[i].length; j++)
+                count += matrix[i][j];
+            if (count != width)
+                list.add(matrix[i]);
+        }
+        while (list.size() < height)
+            list.add(0, new int[width]);
+        for (int i = 0; i < list.size(); i++)
+            matrix[i] = list.get(i);
     }
 }
