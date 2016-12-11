@@ -1,5 +1,6 @@
 package com.javarush.test.level19.lesson10.home06;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,22 +27,46 @@ public class Solution {
     public static Map<Integer, String> map = new HashMap<Integer, String>();
 
     static {
-        map.put(0, "ноль");
         map.put(1, "один");
         map.put(2, "два");
         map.put(3, "три");
         map.put(4, "четыре");
         map.put(5, "пять");
         map.put(6, "шесть");
-        map.put(7, "сем");
-        map.put(8, "восем");
+        map.put(7, "семь");
+        map.put(8, "восемь");
         map.put(9, "девять");
         map.put(10, "десять");
-        map.put(11, "одинадцать");
+        map.put(11, "одиннадцать");
         map.put(12, "двенадцать");
+        map.put(0, "ноль");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String filename = reader.readLine();
+        reader.close();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
+        while (bufferedReader.ready()) {
+            String line = bufferedReader.readLine();
+            String[] data = line.split(" ");
+            for (int d = 0; d < data.length; d++) {
+                try {
+                    for (Map.Entry<Integer, String> k : map.entrySet()) {
+                        if (k.getKey() == Integer.parseInt(data[d]))
+                            data[d] = new String(k.getValue().getBytes(), "utf8");
+                    }
+                } catch (NumberFormatException e) {
+                }
+                line = "";
+                for (String v : data) {
+                    line = line + v + " ";
+                }
+            }
+            line = line.substring(0, line.lastIndexOf(" "));
+            System.out.println(line);
+        }
+        bufferedReader.close();
     }
 }
