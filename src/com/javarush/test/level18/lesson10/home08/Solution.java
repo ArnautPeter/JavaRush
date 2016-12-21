@@ -1,8 +1,6 @@
 package com.javarush.test.level18.lesson10.home08;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -16,67 +14,57 @@ import java.util.Scanner;
 */
 
 public class Solution {
-    public static Map<String, Integer> resultMap = new HashMap<String, Integer>();
+    public volatile static Map<String, Integer> resultMap = new HashMap<>();
 
-    public static void main(String[] args) throws FileNotFoundException
-    {
-
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String fileName = "";
-        while (true) {
-            fileName = sc.next();
-            if(fileName.equals("exit"))
-                return;
-            new ReadThread(fileName);
+
+        for (String fileName = sc.nextLine(); !fileName.equals("exit"); fileName = sc.nextLine()) {
+            Thread th = new ReadThread(fileName);
+            th.start();
+            try {
+                th.join();
+            } catch (Exception e) {
+            }
         }
+
+        sc.close();
     }
 
     public static class ReadThread extends Thread {
-        String fileName;
-        FileInputStream fileInputStream;
-        public ReadThread(String fileName) throws FileNotFoundException
-        {
+        private String fileName;
+
+        public ReadThread(String fileName) {
             //implement constructor body
             this.fileName = fileName;
-            start();
         }
         // implement file reading here - реализуйте чтение из файла тут
 
-        @Override
-        public void run()
-        {
-            int max = Integer.MIN_VALUE;
-            Map<Integer, Integer> tempMap = new HashMap<Integer, Integer>();
-            int currentByte = 0;
-            int tempValue;
-            try
-            {
-                fileInputStream = new FileInputStream(this.fileName);
-                while (fileInputStream.available() > 0) {
-                    currentByte = fileInputStream.read();
-                    if (!tempMap.containsKey(currentByte))
-                        tempMap.put(currentByte, 1);
-                    else
-                    {
-                        tempValue = tempMap.get(currentByte);
-                        tempMap.put(currentByte, ++tempValue);
-                    }
+        public void run() {
+            try {
+                BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileName));
+                int nextByte;
+                int[] bytesCount = new int[256];
+                while ((nextByte = in.read()) != -1) {
+                    if (nextByte < -1) throw new RuntimeException();
+                    bytesCount[nextByte]++;
                 }
-                for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
-                    if (entry.getValue() > max)
-                        max = entry.getValue();
+                int maxI = 0;
+                for (int i = 1; i < bytesCount.length; i++)
+                    if (bytesCount[i] > bytesCount[maxI])
+                        maxI = i;
+                synchronized (Solution.class) {
+                    resultMap.put(fileName, maxI);
                 }
-                synchronized (resultMap)
-                {
-                    resultMap.put(fileName, max);
-                }
-                fileInputStream.close();
-            }
-            catch (IOException e)
-            {
+                //System.out.println(maxI);
+                in.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("File \"" + fileName + "\" not found");
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("Read next byte error. File: \"" + fileName + "\"");
                 e.printStackTrace();
             }
-
         }
     }
 }
